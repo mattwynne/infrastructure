@@ -4,6 +4,9 @@ devenv.local.nix
 
 # direnv
 .direnv
+.local
 
 # pre-commit
 .pre-commit-config.yaml
+.aider*
+.env
