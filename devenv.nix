@@ -8,6 +8,7 @@
   packages = with pkgs; [ 
     git 
     aider-chat
+    terraform
   ];
 
   # https://devenv.sh/languages/
@@ -25,7 +26,6 @@
   '';
 
   enterShell = ''
-    python -m pip install aider-install
     hello
     git --version
   '';
