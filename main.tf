@@ -37,6 +37,13 @@ resource "proxmox_lxc" "container" {
     bridge = "vmbr0"
   }
   
+  connection {
+    type     = "ssh"
+    user     = "root"
+    password = "this is a test"
+    host     = self.ipv4_addresses[0]
+  }
+
   provisioner "remote-exec" {
     inline = [
       "apt-get update",
