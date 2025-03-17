@@ -13,24 +13,6 @@ provider "proxmox" {
   pm_tls_insecure = true
 }
 
-resource "proxmox_vm_qemu" "vm" {
-  name        = "terraform-vm"
-  target_node = "your-target-node"
-  clone       = "100"
-
-  network {
-    model  = "virtio"
-    bridge = "vmbr0"
-  }
-
-  disk {
-    size    = "10G"
-    type    = "scsi"
-    storage = "local-lvm"
-  }
-
-  os_type = "cloud-init"
-}
 
 resource "proxmox_lxc" "container" {
   hostname      = "terraform-lxc"
