@@ -5,13 +5,6 @@ terraform {
     }
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "apt-get update",
-      "apt-get install -y avahi-daemon"
-    ]
-  }
-
 }
 
 provider "proxmox" {
@@ -43,4 +36,12 @@ resource "proxmox_lxc" "container" {
     ip     = "dhcp"
     bridge = "vmbr0"
   }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "apt-get update",
+      "apt-get install -y avahi-daemon"
+    ]
+  }
+
 }
