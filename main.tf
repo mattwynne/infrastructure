@@ -1,7 +1,7 @@
 provider "proxmox" {
-  pm_api_url      = var.pm_api_url
-  pm_user         = var.pm_user
-  pm_password     = var.pm_password
+  pm_api_url      = env("PM_API_URL")
+  pm_user         = env("PM_USER")
+  pm_password     = env("PM_PASSWORD")
   pm_tls_insecure = true
 }
 
