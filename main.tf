@@ -29,5 +29,6 @@ resource "proxmox_lxc" "container" {
   network {
     name = "eth0"
     ip   = "dhcp"
+    vnet = "your-vnet-id"  # Replace with your actual vnet ID
   }
 }
