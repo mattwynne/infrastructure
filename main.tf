@@ -48,6 +48,8 @@ resource "proxmox_lxc" "container" {
     inline = [
       "apt-get update",
       "apt-get install -y avahi-daemon"
+      "echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config",
+      "systemctl restart sshd"
     ]
   }
 
