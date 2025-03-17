@@ -2,6 +2,7 @@
 variable "api_url" {
   description = "Proxmox API URL"
   type        = string
+  default     = "host"
 }
 
 variable "user" {
