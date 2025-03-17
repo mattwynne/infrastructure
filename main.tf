@@ -3,6 +3,7 @@ terraform {
     proxmox = {
       source = "Telmate/proxmox"
     }
+    vlan = "your-vlan-id"  # Replace with your actual VLAN ID
   }
 }
 
