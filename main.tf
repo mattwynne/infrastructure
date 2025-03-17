@@ -8,7 +8,7 @@ provider "proxmox" {
 resource "proxmox_vm_qemu" "vm" {
   name        = "terraform-vm"
   target_node = var.pm_target_node
-  clone       = "your-vm-id"
+  clone       = "100"
 
   network {
     model  = "virtio"
