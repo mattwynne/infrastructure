@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    proxmox = {
+      source = "Telmate/proxmox"
+    }
+  }
+}
+
 provider "proxmox" {
   pm_api_url      = env("PM_API_URL")
   pm_user         = env("PM_USER")
