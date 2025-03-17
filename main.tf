@@ -26,7 +26,7 @@ resource "proxmox_vm_qemu" "vm" {
 
 resource "proxmox_lxc" "container" {
   hostname      = "terraform-lxc"
-  ostemplate    = var.lxc_template
+  ostemplate    = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
   storage       = "local-lvm"
   rootfs        = "8G"
   memory        = 512

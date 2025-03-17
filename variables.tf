@@ -6,6 +6,3 @@ variable "pm_clone_template" {
   description = "Proxmox VM clone template"
 }
 
-variable "lxc_template" {
-  description = "Proxmox LXC template"
-}
