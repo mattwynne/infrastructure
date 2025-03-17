@@ -3,7 +3,6 @@ terraform {
     proxmox = {
       source = "Telmate/proxmox"
     }
-    vlan = "your-vlan-id"  # Replace with your actual VLAN ID
   }
 }
 
@@ -18,7 +17,7 @@ provider "proxmox" {
 resource "proxmox_lxc" "container" {
   hostname      = "terraform-lxc"
   ostemplate    = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
-  target_node   = var.target_node
+  target_node   = "hub"
 
   rootfs {
     storage = "local-lvm"
@@ -28,7 +27,8 @@ resource "proxmox_lxc" "container" {
   memory = 512
   cores  = 1
   network {
-    name = "eth0"
-    ip   = "dhcp"
+    name   = "eth0"
+    ip     = "dhcp"
+    bridge = "vmbr0"
   }
 }

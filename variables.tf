@@ -14,8 +14,3 @@ variable "password" {
   description = "Proxmox password"
   type        = string
 }
-
-variable "target_node" {
-  description = "Proxmox target node"
-  type        = string
-}
