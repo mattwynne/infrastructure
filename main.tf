@@ -41,7 +41,7 @@ resource "proxmox_lxc" "container" {
     type     = "ssh"
     user     = "root"
     password = "this is a test"
-    host     = self.ipv4_addresses[0]
+    host     = self.network[0].ip
   }
 
   provisioner "remote-exec" {
