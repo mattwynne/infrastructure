@@ -5,7 +5,6 @@ terraform {
     }
   }
 
-  onboot = true
 }
 
 provider "proxmox" {
@@ -15,19 +14,23 @@ provider "proxmox" {
   pm_tls_insecure = true
 }
 
-
+# See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
 resource "proxmox_lxc" "container" {
-  hostname      = "terraform-lxc"
-  ostemplate    = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
   target_node   = "hub"
+  hostname      = "test1"
+  ostemplate    = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
+  password      = "this is a test"
+  memory = 512
+  cores  = 1
+  onboot = true
+  start = true
+  unprivileged = true
 
   rootfs {
     storage = "local-lvm"
     size    = "8G"
   }
 
-  memory = 512
-  cores  = 1
   network {
     name   = "eth0"
     ip     = "dhcp"
