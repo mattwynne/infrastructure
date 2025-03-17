@@ -42,10 +42,8 @@ resource "proxmox_lxc" "container" {
     size    = "8G"
   }
 
-  resources {
-    memory = 512
-    cores  = 1
-  }
+  memory = 512
+  cores  = 1
   network {
     name = "eth0"
     ip   = "dhcp"
