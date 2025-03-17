@@ -33,7 +33,7 @@ resource "proxmox_lxc" "container" {
 
   network {
     name   = "eth0"
-    ip     = "dhcp"
+    ip     = "192.168.1.200/24"
     bridge = "vmbr0"
   }
   
