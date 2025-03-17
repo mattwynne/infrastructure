@@ -5,6 +5,13 @@ terraform {
     }
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "apt-get update",
+      "apt-get install -y avahi-daemon"
+    ]
+  }
+
 }
 
 provider "proxmox" {
