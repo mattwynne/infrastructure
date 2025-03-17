@@ -4,6 +4,8 @@ terraform {
       source = "Telmate/proxmox"
     }
   }
+
+  onboot = true
 }
 
 provider "proxmox" {
