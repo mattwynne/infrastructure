@@ -7,9 +7,9 @@ terraform {
 }
 
 provider "proxmox" {
-  pm_api_url      = var.pm_api_url
-  pm_user         = var.pm_user
-  pm_password     = var.pm_password
+  pm_api_url      = var.api_url
+  pm_user         = var.user
+  pm_password     = var.password
   pm_tls_insecure = true
 }
 
@@ -39,7 +39,7 @@ resource "proxmox_lxc" "container" {
   rootfs        = "8G"
   memory        = 512
   cpus          = 1
-  target_node   = var.pm_target_node
+  target_node   = var.target_node
   network {
     name = "eth0"
     ip   = "dhcp"

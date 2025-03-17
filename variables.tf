@@ -1,20 +1,20 @@
 
-variable "pm_api_url" {
+variable "api_url" {
   description = "Proxmox API URL"
   type        = string
 }
 
-variable "pm_user" {
+variable "user" {
   description = "Proxmox user"
   type        = string
 }
 
-variable "pm_password" {
+variable "password" {
   description = "Proxmox password"
   type        = string
 }
 
-variable "pm_target_node" {
+variable "target_node" {
   description = "Proxmox target node"
   type        = string
 }
