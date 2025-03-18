@@ -4,7 +4,10 @@ terraform {
       source = "Telmate/proxmox"
     }
   }
-}
+  provisioner "file" {
+    source      = "./provision.sh"
+    destination = "/root/provision.sh"
+  }
 
 provider "proxmox" {
   pm_api_url      = "https://192.168.1.57:8006/api2/json"
