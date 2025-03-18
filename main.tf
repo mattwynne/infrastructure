@@ -4,7 +4,9 @@ terraform {
       source = "Telmate/proxmox"
     }
   }
-}
+  provisioner "local-exec" {
+    command = "ip ${self.id}"
+  }
 
 provider "proxmox" {
   pm_api_url      = "https://192.168.1.57:8006/api2/json"
