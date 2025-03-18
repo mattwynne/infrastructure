@@ -4,13 +4,12 @@ terraform {
       source = "Telmate/proxmox"
     }
   }
-  provisioner "local-exec" {
-    command = "ip ${self.id}"
-  }
+}
 
 provider "proxmox" {
   pm_api_url      = "https://192.168.1.57:8006/api2/json"
   pm_tls_insecure = true
+  pm_debug = true
 }
 
 # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
@@ -33,8 +32,20 @@ resource "proxmox_lxc" "container" {
   }
 
   network {
+    firewall = false
     name   = "eth0"
-    ip     = "dhcp"
+    ip     = "192.168.1.220/24"
     bridge = "vmbr0"
+  }
+
+   connection {
+    type     = "ssh"
+    user     = "root"
+    host     = "192.168.1.220"
+    private_key = file("~/.ssh/hub.local")
+  }
+
+  provisioner "remote-exec" {
+    inline = [ "echo 'yo' > /yo.txt " ]
   }
 }

@@ -26,11 +26,13 @@
   '';
 
   scripts.ip.exec = ''
-    ssh hub.local lxc-info -i -n $1 | awk '{print $2}'
+    id=$(basename $1)
+    ssh hub.local lxc-info -i -n $id | awk '{print $2}'
   '';
 
   scripts.console.exec = ''
-    ip=$(ip $1)
+    id=$(basename $1)
+    ip=$(ip $id)
     ssh -i ~/.ssh/hub.local root@$ip
   '';
 
