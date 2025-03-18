@@ -23,6 +23,10 @@ resource "proxmox_lxc" "container" {
   start = true
   unprivileged = true
 
+  post_start = <<EOF
+  /path/to/provision.sh
+  EOF
+
   ssh_public_keys = file("~/.ssh/hub.local.pub")
 
   rootfs {
