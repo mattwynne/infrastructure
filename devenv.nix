@@ -25,6 +25,15 @@
     echo hello from $GREET
   '';
 
+  scripts.ip.exec = ''
+    ssh hub.local lxc-info -i -n $1 | awk '{print $2}'
+  '';
+
+  scripts.console.exec = ''
+    ip=$(ip $1)
+    ssh -i ~/.ssh/hub.local root@$ip
+  '';
+
   enterShell = ''
     hello
     git --version
