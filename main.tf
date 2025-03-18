@@ -4,13 +4,10 @@ terraform {
       source = "Telmate/proxmox"
     }
   }
-
 }
 
 provider "proxmox" {
-  pm_api_url      = var.api_url
-  pm_user         = var.user
-  pm_password     = var.password
+  pm_api_url      = "https://192.168.1.57:8006/api2/json"
   pm_tls_insecure = true
 }
 
@@ -33,24 +30,7 @@ resource "proxmox_lxc" "container" {
 
   network {
     name   = "eth0"
-    ip     = "192.168.1.200/24"
+    ip     = "dhcp"
     bridge = "vmbr0"
   }
-  
-  connection {
-    type     = "ssh"
-    user     = "root"
-    password = "this is a test"
-    host     = self.network[0].ip
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "apt-get update",
-      "apt-get install -y avahi-daemon"
-      "echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config",
-      "systemctl restart sshd"
-    ]
-  }
-
 }
