@@ -23,6 +23,8 @@ resource "proxmox_lxc" "container" {
   start = true
   unprivileged = true
 
+  ssh_public_keys = file("~/.ssh/hub.local.pub")
+
   rootfs {
     storage = "local-lvm"
     size    = "8G"
