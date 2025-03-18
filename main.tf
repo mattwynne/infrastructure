@@ -4,10 +4,7 @@ terraform {
       source = "Telmate/proxmox"
     }
   }
-  provisioner "file" {
-    source      = "./provision.sh"
-    destination = "/root/provision.sh"
-  }
+}
 
 provider "proxmox" {
   pm_api_url      = "https://192.168.1.57:8006/api2/json"
@@ -25,8 +22,6 @@ resource "proxmox_lxc" "container" {
   onboot = true
   start = true
   unprivileged = true
-
-  post_start = file("./provision.sh")
 
   ssh_public_keys = file("~/.ssh/hub.local.pub")
 
