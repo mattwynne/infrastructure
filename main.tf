@@ -70,7 +70,7 @@ resource "proxmox_lxc" "container" {
       "  sleep 5",
       "  ip=$(lxc-info -i -n $id | grep 'IP' | awk '{print $2}')",
       "done",
-      "echo IP Address: $ip"
+      "echo IP Address: $ip",
       "echo $ip > ip_address.txt"
     ]
   }
