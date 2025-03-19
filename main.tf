@@ -46,7 +46,7 @@ resource "proxmox_lxc" "container" {
   }
 
   provisioner "remote-exec" {
-    when    = "create"
-    inline  = [ "lxc-info -i -n ${self.vmid}" ]
+    when    = create
+    inline  = [ "lxc-info -i -n ${self.id}" ]
   }
 }
