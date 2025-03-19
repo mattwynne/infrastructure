@@ -6,6 +6,14 @@ terraform {
   }
 }
 
+output "container_id" {
+  value = proxmox_lxc.container.id
+}
+
+output "container_vmid" {
+  value = split("/", proxmox_lxc.container.id)[2]
+}
+
 provider "proxmox" {
   pm_api_url      = "https://192.168.1.57:8006/api2/json"
   pm_tls_insecure = true
