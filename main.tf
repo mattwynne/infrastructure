@@ -4,19 +4,6 @@ terraform {
       source = "Telmate/proxmox"
     }
   }
-
-}
-
-locals {
-  container_ip = "IP address will be stored here after provisioning"
-}
-
-output "container_id" {
-  value = proxmox_lxc.container.id
-}
-
-output "container_vmid" {
-  value = split("/", proxmox_lxc.container.id)[2]
 }
 
 provider "proxmox" {
@@ -51,7 +38,7 @@ resource "proxmox_lxc" "container" {
     bridge = "vmbr0"
   }
 
-   connection {
+  connection {
     type     = "ssh"
     user     = "root"
     host     = "hub.local"
@@ -61,17 +48,8 @@ resource "proxmox_lxc" "container" {
   provisioner "remote-exec" {
     when    = create
     inline  = [
-      "id=${split("/", self.id)[2]}",
-      "echo VM ID: $id",
-      "lxc-info -s -n $id",
-      "lxc-info -i -n $id",
-      "ip=''",
-      "while [ -z \"$ip\" ]; do",
-      "  sleep 5",
-      "  ip=$(lxc-info -i -n $id | grep 'IP' | awk '{print $2}')",
-      "done",
-      "echo IP Address: $ip",
-      "echo $ip > ip_address.txt"
+      "id=${split("/", proxmox_lxc.container.id)[2]}",
+      "lxc-attach -n $id -- apt-get install -y avahi-daemon",
     ]
   }
 }
