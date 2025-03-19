@@ -52,6 +52,7 @@ resource "proxmox_lxc" "container" {
   provisioner "remote-exec" {
     when    = create
     inline  = [
+      "echo Split ID: ${split("/", proxmox_lxc.container.id)}",
       "echo VMID: ${local.vmid}",
       "lxc-info -i -n ${local.vmid}"
     ]
