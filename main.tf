@@ -74,9 +74,4 @@ resource "proxmox_lxc" "container" {
       "echo $ip > ip_address.txt"
     ]
   }
-
-  provisioner "local-exec" {
-    when    = create
-    command = "echo $ip > ip_address.txt"
-  }
 }
