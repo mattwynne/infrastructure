@@ -7,8 +7,8 @@ terraform {
 
 }
 
-output "container_ip" {
-  value = file("ip_address.txt")
+locals {
+  container_ip = "IP address will be stored here after provisioning"
 }
 
 output "container_id" {
