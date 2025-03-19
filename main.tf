@@ -13,6 +13,10 @@ provider "proxmox" {
 }
 
 # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
+locals {
+  vmid = split("/", proxmox_lxc.container.id)[2]
+}
+
 resource "proxmox_lxc" "container" {
   target_node   = "hub"
   hostname      = "test1"
@@ -48,9 +52,8 @@ resource "proxmox_lxc" "container" {
   provisioner "remote-exec" {
     when    = create
     inline  = [
-      "VMID=$(echo ${self.id} | awk -F'/' '{print $3}')",
-      "echo VMID: $VMID",
-      "lxc-info -i -n $VMID"
+      "echo VMID: ${local.vmid}",
+      "lxc-info -i -n ${local.vmid}"
     ]
   }
 }
