@@ -45,11 +45,17 @@ resource "proxmox_lxc" "container" {
     private_key = file("~/.ssh/hub.local")
   }
 
+  provisioner "file" {
+    source = "test1-init.sh"
+    destination = "/root/test1-init.sh"
+  }
+
   provisioner "remote-exec" {
     when    = create
     inline  = [
       "id=${split("/", proxmox_lxc.container.id)[2]}",
-      "lxc-attach -n $id -- apt-get install -y avahi-daemon",
+      "pct push $id /root/test1-init.sh /root/init.sh",
+      "lxc-attach -n $id -- bash init.sh"
     ]
   }
 }
