@@ -60,7 +60,11 @@ resource "proxmox_lxc" "container" {
       "echo VM ID: $id",
       "lxc-info -s -n $id",
       "lxc-info -i -n $id",
-      "ip=$(lxc-info -i -n $id)",
+      "ip=''",
+      "while [ -z \"$ip\" ]; do",
+      "  sleep 5",
+      "  ip=$(lxc-info -i -n $id | grep 'IP' | awk '{print $2}')",
+      "done",
       "echo IP Address: $ip"
     ]
   }
