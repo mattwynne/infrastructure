@@ -27,12 +27,14 @@
 
   scripts.ip.exec = ''
     id=$(basename $1)
-    ip=''
-    while [ -z "$ip" ]; do
-      sleep 5
-      ip=$(ssh hub.local lxc-info -i -n $id | grep 'IP' | awk '{print $2}')
-    done
-    echo $ip
+    ssh hub.local "
+      ip=''
+      while [ -z \"\$ip\" ]; do
+        sleep 5
+        ip=\$(lxc-info -i -n $id | grep 'IP' | awk '{print \$2}')
+      done
+      echo \$ip
+    "
   '';
 
   scripts.console.exec = ''
