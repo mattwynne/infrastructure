@@ -21,7 +21,6 @@ resource "proxmox_lxc" "container" {
   target_node   = local.proxmox_host
   hostname      = "test1"
   ostemplate    = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
-  password      = "this is a test"
   memory = 512
   cores  = 1
   onboot = true
