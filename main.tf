@@ -46,6 +46,6 @@ resource "proxmox_lxc" "container" {
   }
 
   provisioner "remote-exec" {
-    inline = [ "lxc-info -i -n ${split(self.id, "/")[2]}" ]
+    inline = [ "lxc-info -i -n ${self.vmid}" ]
   }
 }
