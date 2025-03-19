@@ -47,6 +47,10 @@ resource "proxmox_lxc" "container" {
 
   provisioner "remote-exec" {
     when    = create
-    inline  = [ "lxc-info -i -n ${split("/", self.id)[2]}" ]
+    inline  = [
+      "VMID=$(echo ${self.id} | awk -F'/' '{print $3}')",
+      "echo VMID: $VMID",
+      "lxc-info -i -n $VMID"
+    ]
   }
 }
