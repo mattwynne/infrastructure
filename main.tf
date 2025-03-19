@@ -56,10 +56,12 @@ resource "proxmox_lxc" "container" {
   provisioner "remote-exec" {
     when    = create
     inline  = [
-      "echo Split ID: ${split("/", self.id)}",
-      "VMID=$(echo ${self.id} | awk -F'/' '{print $3}')",
-      "echo VMID: $VMID",
-      "lxc-info -i -n $VMID"
+      "id=${split("/", self.id)[2]}",
+      "echo VM ID: $id",
+      "lxc-info -s -n $id",
+      "lxc-info -i -n $id",
+      "ip=$(lxc-info -i -n $id)",
+      "echo IP Address: $ip"
     ]
   }
 }
