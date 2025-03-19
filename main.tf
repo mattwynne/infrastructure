@@ -6,6 +6,10 @@ terraform {
   }
 }
 
+locals {
+  proxmox_host = "hub"
+}
+
 provider "proxmox" {
   pm_api_url      = "https://192.168.1.57:8006/api2/json"
   pm_tls_insecure = true
@@ -14,7 +18,7 @@ provider "proxmox" {
 
 # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
 resource "proxmox_lxc" "container" {
-  target_node   = "hub"
+  target_node   = local.proxmox_host
   hostname      = "test1"
   ostemplate    = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
   password      = "this is a test"
@@ -32,7 +36,6 @@ resource "proxmox_lxc" "container" {
   }
 
   network {
-    firewall = false
     name   = "eth0"
     ip     = "dhcp"
     bridge = "vmbr0"
@@ -41,7 +44,7 @@ resource "proxmox_lxc" "container" {
   connection {
     type     = "ssh"
     user     = "root"
-    host     = "hub.local"
+    host     = "${local.proxmox_host}.local"
     private_key = file("~/.ssh/hub.local")
   }
 
