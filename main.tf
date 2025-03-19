@@ -34,18 +34,18 @@ resource "proxmox_lxc" "container" {
   network {
     firewall = false
     name   = "eth0"
-    ip     = "192.168.1.220/24"
+    ip     = "dhcp"
     bridge = "vmbr0"
   }
 
    connection {
     type     = "ssh"
     user     = "root"
-    host     = "192.168.1.220"
+    host     = "hub.local"
     private_key = file("~/.ssh/hub.local")
   }
 
   provisioner "remote-exec" {
-    inline = [ "echo 'yo' > /yo.txt " ]
+    inline = [ "lxc-info -i -n ${split(self.id, "/")[2]}" ]
   }
 }
