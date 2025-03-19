@@ -28,9 +28,8 @@
   scripts.ip.exec = ''
     id=$(basename $1)
     ssh hub.local "
-      ip=''
+      ip=""
       while [ -z \"\$ip\" ]; do
-        sleep 5
         ip=\$(lxc-info -i -n $id | grep 'IP' | awk '{print \$2}')
       done
       echo \$ip
