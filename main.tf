@@ -13,7 +13,6 @@ provider "proxmox" {
 }
 
 # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
-
 resource "proxmox_lxc" "container" {
   target_node   = "hub"
   hostname      = "test1"
