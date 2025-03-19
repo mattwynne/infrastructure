@@ -4,15 +4,15 @@ terraform {
       source = "Telmate/proxmox"
     }
   }
+
+  provisioner "local-exec" {
+    when    = create
+    command = "echo $ip > ip_address.txt"
+  }
 }
 
 output "container_ip" {
-  value = chomp(provisioner "remote-exec" {
-    inline = [
-      "ip=$(lxc-info -i -n ${split("/", self.id)[2]} | grep 'IP' | awk '{print $2}')",
-      "echo $ip"
-    ]
-  })
+  value = file("ip_address.txt")
 }
 
 output "container_id" {
