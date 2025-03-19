@@ -5,10 +5,6 @@ terraform {
     }
   }
 
-  provisioner "local-exec" {
-    when    = create
-    command = "echo $ip > ip_address.txt"
-  }
 }
 
 output "container_ip" {
@@ -75,6 +71,12 @@ resource "proxmox_lxc" "container" {
       "  ip=$(lxc-info -i -n $id | grep 'IP' | awk '{print $2}')",
       "done",
       "echo IP Address: $ip"
+      "echo $ip > ip_address.txt"
     ]
+  }
+
+  provisioner "local-exec" {
+    when    = create
+    command = "echo $ip > ip_address.txt"
   }
 }
