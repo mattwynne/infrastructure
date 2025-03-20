@@ -26,15 +26,13 @@ resource "proxmox_virtual_environment_container" "ubuntu_container" {
   node_name = "hub"
   vm_id     = 101
 
-  console {
-    enabled   = true
-    tty_count = 2
-    type      = "tty"
-  }
-
   disk {
     datastore_id = "local"
     size         = 8
+  }
+
+  features {
+    nesting = true
   }
 
   initialization {
@@ -44,13 +42,6 @@ resource "proxmox_virtual_environment_container" "ubuntu_container" {
       ipv4 {
         address = "dhcp"
       }
-      ipv6 {
-        address = "dhcp"
-      }
-    }
-
-    dns {
-      domain = " "
     }
 
     user_account {
@@ -84,6 +75,27 @@ resource "proxmox_virtual_environment_container" "ubuntu_container" {
     up_delay   = "60"
     down_delay = "60"
   }
+
+  connection {
+    type     = "ssh"
+    user     = "root"
+    host     = "hub.local"
+    private_key = file("~/.ssh/hub.local")
+  }
+
+  provisioner "file" {
+    source = "test1-init.sh"
+    destination = "/root/test1-init.sh"
+  }
+
+  provisioner "remote-exec" {
+    when    = create
+    inline  = [
+      "id=${proxmox_virtual_environment_container.ubuntu_container.id}",
+      "pct push $id /root/test1-init.sh /root/init.sh",
+      "lxc-attach -n $id -- bash init.sh"
+    ]
+  }
 }
 
 resource "proxmox_virtual_environment_download_file" "latest_ubuntu_24" {
@@ -103,6 +115,11 @@ resource "random_password" "ubuntu_container_password" {
 resource "tls_private_key" "ubuntu_container_key" {
   algorithm = "RSA"
   rsa_bits  = 2048
+}
+
+output "vmid" {
+  value     = proxmox_virtual_environment_container.ubuntu_container.id
+  sensitive = true
 }
 
 output "ubuntu_container_password" {
