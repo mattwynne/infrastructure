@@ -18,23 +18,24 @@ provider "proxmox" {
 # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
 resource "proxmox_virtual_environment_container" "container" {
   node_name   = local.proxmox_host
-  hostname    = "test1"
-  ostemplate  = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
+  vmid        = 100
+  template    = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
   memory      = 512
-  cores       = 1
+  cpu {
+    cores = 1
+  }
   onboot      = true
   unprivileged = true
 
-  ssh_public_keys = file("~/.ssh/hub.local.pub")
+  ssh_keys = file("~/.ssh/hub.local.pub")
 
-  rootfs {
+  disk {
     storage = "local-lvm"
     size    = 8
   }
 
   network {
-    name    = "eth0"
-    ip      = "dhcp"
+    model   = "virtio"
     bridge  = "vmbr0"
   }
 
