@@ -18,25 +18,24 @@ provider "proxmox" {
 # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
 resource "proxmox_virtual_environment_container" "container" {
   node_name   = local.proxmox_host
-  vm_name     = "test1"
-  template    = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
+  hostname    = "test1"
+  ostemplate  = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
   memory      = 512
   cores       = 1
   onboot      = true
-  start       = true
   unprivileged = true
 
-  ssh_keys = file("~/.ssh/hub.local.pub")
+  ssh_public_keys = file("~/.ssh/hub.local.pub")
 
-  disk {
+  rootfs {
     storage = "local-lvm"
-    size    = "8G"
+    size    = 8
   }
 
   network {
-    interface = "eth0"
-    ip        = "dhcp"
-    bridge    = "vmbr0"
+    name    = "eth0"
+    ip      = "dhcp"
+    bridge  = "vmbr0"
   }
 
   connection {
@@ -46,17 +45,10 @@ resource "proxmox_virtual_environment_container" "container" {
     private_key = file("~/.ssh/hub.local")
   }
 
-  provisioner "file" {
-    source      = "test1-init.sh"
-    destination = "/root/test1-init.sh"
-  }
-
   provisioner "remote-exec" {
-    when   = create
     inline = [
-      "id=${split("/", proxmox_vm.container.id)[2]}",
-      "pct push $id /root/test1-init.sh /root/init.sh",
-      "lxc-attach -n $id -- bash init.sh"
+      "lxc-attach -n ${self.id} -- bash -c 'echo \"$(cat test1-init.sh)\" > /root/init.sh'",
+      "lxc-attach -n ${self.id} -- bash /root/init.sh"
     ]
   }
 }
