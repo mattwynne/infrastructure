@@ -1,4 +1,4 @@
 output "lxc_id" {
   description = "The ID of the created LXC container"
-  value       = proxmox_container.container.id
+  value       = proxmox_virtual_environment_container.container.id
 }
