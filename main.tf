@@ -11,9 +11,9 @@ locals {
 }
 
 provider "proxmox" {
-  pm_api_url      = "https://192.168.1.57:8006/api2/json"
-  pm_tls_insecure = true
-  pm_debug        = true
+  endpoint = "https://192.168.1.57:8006/api2/json"
+  insecure = true
+  debug    = true
 }
 
 # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
