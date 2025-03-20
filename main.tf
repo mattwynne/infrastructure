@@ -16,7 +16,7 @@ provider "proxmox" {
 }
 
 # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
-resource "proxmox_vm" "container" {
+resource "proxmox_lxc" "container" {
   node_name   = local.proxmox_host
   vm_name     = "test1"
   template    = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
