@@ -9,6 +9,7 @@
     git 
     aider-chat
     terraform
+    adrgen
   ];
 
   # https://devenv.sh/languages/
