@@ -13,7 +13,6 @@ locals {
 provider "proxmox" {
   endpoint = "https://192.168.1.57:8006/api2/json"
   insecure = true
-  debug    = true
 }
 
 # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/lxc
