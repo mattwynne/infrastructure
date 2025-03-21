@@ -6,5 +6,5 @@ if [ -z "$NAS_PASSWORD" ]; then
   exit 1
 fi
 
-# Substitute the placeholder with the environment variable
-sed -i '' "s/PLACEHOLDER_PASSWORD/$NAS_PASSWORD/" containers/plex/media-nas.mount
+# Substitute the placeholder with the environment variable and create the new file
+sed "s/PLACEHOLDER_PASSWORD/$NAS_PASSWORD/" containers/plex/media-nas.mount.template > containers/plex/media-nas.mount
