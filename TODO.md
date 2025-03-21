@@ -1,8 +1,7 @@
-big goal: create plex container with lxc
-  - work out how to create lxc
-    - work out how to provision sofrware onto LXC
-      - could use remove-provisioner
-        - would need to capture ip address of container
-  - map drives
-    - drive for storing config / metadata
-    - drive for media
+big goal:
+  refactor current setup to be ready to absorb more containers
+
+  next step:
+    try using ansible to configure the container
+    try using packer to build the container image
+    investigate how I could use nix to configure the container
