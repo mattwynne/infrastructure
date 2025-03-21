@@ -172,10 +172,6 @@ resource "proxmox_virtual_environment_container" "plex" {
     destination = "/root/init/plex/media-nas.mount"
   }
 
-  provisioner "file" {
-    source      = "containers/plex/.cifs-credentials"
-    destination = "/root/init/plex/.cifs-credentials"
-  }
 
   provisioner "remote-exec" {
     when = create
@@ -184,7 +180,6 @@ resource "proxmox_virtual_environment_container" "plex" {
 
       "pct push $id /root/init/plex/init.sh /root/init.sh",
       "pct push $id /root/init/plex/media-nas.mount /root/media-nas.mount",
-      "pct push $id /root/init/plex/.cifs-credentials /root/.cifs-credentials",
 
       "lxc-attach -n $id -- bash init.sh"
     ]
