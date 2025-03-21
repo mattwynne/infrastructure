@@ -14,3 +14,5 @@ devenv.local.nix
 .terraform
 terraform.tfstate
 terraform.tfstate.backup
+
+containers/plex/media-nas.mount

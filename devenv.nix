@@ -21,6 +21,14 @@
   # https://devenv.sh/services/
   # services.postgres.enable = true;
 
+  scripts.make-plex.exec = ''
+    if [ -z "$NAS_PASSWORD" ]; then
+      echo "Error: NAS_PASSWORD environment variable is not set."
+      exit 1
+    fi
+    sed "s/PLACEHOLDER_PASSWORD/$NAS_PASSWORD/" containers/plex/media-nas.mount.template > containers/plex/media-nas.mount
+  '';
+
   # https://devenv.sh/scripts/
   scripts.hello.exec = ''
     echo hello from $GREET
@@ -35,6 +43,20 @@
       done
       echo \$ip
     "
+  '';
+
+  scripts.apply.exec = ''
+    terraform apply -auto-approve
+  '';
+
+  scripts.destroy.exec = ''
+    terraform destroy -auto-approve
+  '';
+
+  scripts.reapply.exec = ''
+    make-plex
+    destroy
+    apply
   '';
 
   scripts.console.exec = ''
