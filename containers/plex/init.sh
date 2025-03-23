@@ -22,6 +22,10 @@ wget -qO- https://downloads.plex.tv/plex-keys/PlexSign.key >/usr/share/keyrings/
 echo "deb [signed-by=/usr/share/keyrings/PlexSign.asc] https://downloads.plex.tv/repo/deb/ public main" >/etc/apt/sources.list.d/plexmediaserver.list
 echo "Set Up Plex Media Server Repository"
 
+# make plex user now, make it root so that the mount will work later
+useradd plex
+usermod -ou 0 -g 0 plex
+
 echo "Installing Plex Media Server"
 apt-get update
 apt-get -o Dpkg::Options::="--force-confold" install -y plexmediaserver
@@ -33,6 +37,7 @@ fi
 echo "Installed Plex Media Server"
 
 echo "Setting up media share"
+apt install cifs-utils -y
 mv media-nas.mount /etc/systemd/system/
 systemctl enable media-nas.mount
 systemctl start media-nas.mount
