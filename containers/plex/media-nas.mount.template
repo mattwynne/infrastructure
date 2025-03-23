@@ -6,7 +6,7 @@
 [Mount]
   What=//192.168.1.101/public
   Where=/media/nas
-  Options=username=core,password=PLACEHOLDER_PASSWORD,file_mode=777,dir_mode=777
+  Options=username=core,password=PLACEHOLDER_PASSWORD,file_mode=777,dir_mode=777,uid=999,gid=990,rw
   Type=cifs
 
 [Install]
