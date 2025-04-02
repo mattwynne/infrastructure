@@ -1,6 +1,7 @@
 ---
 - name: Update and install avahi-daemon
   hosts: all
+  remote_user: root
   tasks:
     - name: Update apt cache
       ansible.builtin.apt:
