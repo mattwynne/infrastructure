@@ -1,33 +1,4 @@
-terraform {
-  required_providers {
-    proxmox = {
-      source  = "bpg/proxmox"
-      version = "0.73.1"
-    }
-  provisioner "local-exec" {
-    command = <<EOT
-      terraform output -raw ubuntu_container_private_key > /tmp/terraform_private_key.pem
-      chmod 600 /tmp/terraform_private_key.pem
-      ansible-playbook -i plex.local, containers/plex/playbook.yml -u root --private-key /tmp/terraform_private_key.pem
-      rm /tmp/terraform_private_key.pem
-    EOT
-  }
-}
-
-provider "proxmox" {
-  endpoint = "https://hub.local:8006/"
-  insecure = true
-  tmp_dir  = "/var/tmp"
-
-  ssh {
-    # agent = true
-    private_key = file("~/.ssh/hub.local")
-    # TODO: uncomment and configure if using api_token instead of password
-    # username = "root"
-  }
-}
-
-resource "proxmox_virtual_environment_container" "ubuntu_container" {
+resource "proxmox_virtual_environment_container" "sandbox" {
   description = "Managed by Terraform"
 
   node_name = "hub"
@@ -43,7 +14,7 @@ resource "proxmox_virtual_environment_container" "ubuntu_container" {
   }
 
   initialization {
-    hostname = "test3"
+    hostname = "sandbox"
 
     ip_config {
       ipv4 {
@@ -53,9 +24,9 @@ resource "proxmox_virtual_environment_container" "ubuntu_container" {
 
     user_account {
       keys = [
-        trimspace(tls_private_key.ubuntu_container_key.public_key_openssh)
+        trimspace(tls_private_key.container_key.public_key_openssh)
       ]
-      password = random_password.ubuntu_container_password.result
+      password = random_password.container_password.result
     }
   }
 
@@ -70,13 +41,6 @@ resource "proxmox_virtual_environment_container" "ubuntu_container" {
     type = "ubuntu"
   }
 
-  # mount_point {
-  #   # volume mount, a new volume will be created by PVE
-  #   volume = "local-lvm"
-  #   size   = "10G"
-  #   path   = "/mnt/volume"
-  # }
-
   startup {
     order      = "3"
     up_delay   = "60"
@@ -88,20 +52,6 @@ resource "proxmox_virtual_environment_container" "ubuntu_container" {
     user        = "root"
     host        = "hub.local"
     private_key = file("~/.ssh/hub.local")
-  }
-
-  provisioner "file" {
-    source      = "test1-init.sh"
-    destination = "/root/test1-init.sh"
-  }
-
-  provisioner "remote-exec" {
-    when = create
-    inline = [
-      "id=${proxmox_virtual_environment_container.ubuntu_container.id}",
-      "pct push $id /root/test1-init.sh /root/init.sh",
-      "lxc-attach -n $id -- bash init.sh"
-    ]
   }
 }
 
@@ -131,10 +81,11 @@ resource "proxmox_virtual_environment_container" "plex" {
 
     user_account {
       keys = [
-        trimspace(tls_private_key.ubuntu_container_key.public_key_openssh)
+        trimspace(tls_private_key.container_key.public_key_openssh)
       ]
-      password = random_password.ubuntu_container_password.result
+      password = random_password.container_password.result
     }
+
   }
 
   network_interface {
@@ -148,10 +99,8 @@ resource "proxmox_virtual_environment_container" "plex" {
     type = "ubuntu"
   }
 
+  # TODO: these data folders should be on the nas too so we can re-pave the hub
   mount_point {
-    # volume mount, a new volume will be created by PVE
-    # volume = "local-lvm"
-    # size   = "10G"
     volume = "/root/data/plex"
     path   = "/var/lib/plexmediaserver"
   }
@@ -161,50 +110,32 @@ resource "proxmox_virtual_environment_container" "plex" {
     up_delay   = "60"
     down_delay = "60"
   }
-
-  connection {
-    type        = "ssh"
-    user        = "root"
-    host        = "hub.local"
-    private_key = file("~/.ssh/hub.local")
-  }
-
 }
 
-resource "proxmox_virtual_environment_download_file" "latest_ubuntu_24" {
-  content_type = "vztmpl"
-  datastore_id = "local"
-  node_name    = "hub"
-  # http://download.proxmox.com/images/system/
-  url = "http://download.proxmox.com/images/system/ubuntu-24.10-standard_24.10-1_amd64.tar.zst"
-}
-
-resource "random_password" "ubuntu_container_password" {
+resource "random_password" "container_password" {
   length           = 16
   override_special = "_%@"
   special          = true
 }
 
-resource "tls_private_key" "ubuntu_container_key" {
+resource "tls_private_key" "container_key" {
   algorithm = "RSA"
   rsa_bits  = 2048
 }
 
-output "vmid" {
-  value     = proxmox_virtual_environment_container.ubuntu_container.id
+output "container_private_key" {
+  value     = tls_private_key.container_key.private_key_pem
   sensitive = true
 }
 
-output "ubuntu_container_password" {
-  value     = random_password.ubuntu_container_password.result
-  sensitive = true
+output "container_public_key" {
+  value = tls_private_key.container_key.public_key_openssh
 }
 
-output "ubuntu_container_private_key" {
-  value     = tls_private_key.ubuntu_container_key.private_key_pem
-  sensitive = true
+output "container_plex_vmid" {
+  value = proxmox_virtual_environment_container.plex.id
 }
 
-output "ubuntu_container_public_key" {
-  value = tls_private_key.ubuntu_container_key.public_key_openssh
+output "container_sandbox_vmid" {
+  value = proxmox_virtual_environment_container.sandbox.id
 }

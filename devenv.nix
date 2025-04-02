@@ -10,6 +10,7 @@
     aider-chat
     terraform
     adrgen
+    ansible
   ];
 
   # https://devenv.sh/languages/
@@ -50,19 +51,72 @@
   '';
 
   scripts.destroy.exec = ''
-    terraform destroy -auto-approve
+    name=$1
+    id=$(vmid $name)
+    ssh hub.local lxc-destroy -f $id
   '';
 
   scripts.reapply.exec = ''
     make-plex
     destroy
     apply
+    provision plex
+    provision sandbox
   '';
 
   scripts.console.exec = ''
-    id=$(basename $1)
-    ip=$(ip $id)
-    ssh -i ~/.ssh/hub.local root@$ip
+    name=$1
+    ip=$(ip $(vmid $name))
+
+    ssh-keygen -R $ip
+    terraform output -raw container_private_key > /tmp/private_key.pem
+    chmod 600 /tmp/private_key.pem
+
+    ssh -i /tmp/private_key.pem root@$ip
+
+    rm /tmp/private_key.pem
+  '';
+
+  scripts.provision.exec = ''
+    name=$1
+    ip=$(ip $(vmid $name))
+
+    if [ -f containers/$name/init.sh ]; then
+      provision-init $name
+    else
+      provision-ansible $name
+    fi
+  '';
+
+  scripts.provision-init.exec = ''
+    name=$1
+    id=$(vmid $name)
+
+    scp containers/$name/init.sh hub.local:/root/$name-init.sh
+    ssh hub.local pct push $id /root/$name-init.sh /root/init.sh
+    ssh hub.local lxc-attach -n $id -- bash init.sh
+    ssh hub.local lxc-attach -n $id -- rm /root/init.sh
+  '';
+
+  scripts.provision-ansible.exec = ''
+    name=$1
+    ip=$(ip $(vmid $name))
+
+    # Set up key
+    ssh-keygen -R $ip
+    terraform output -raw container_private_key > /tmp/private_key.pem
+    chmod 600 /tmp/private_key.pem
+
+    # Run playbook
+    ansible-playbook -i $ip, containers/$name/playbook.yml -u root --private-key /tmp/private_key.pem
+
+    # Remove key
+    rm /tmp/private_key.pem
+  '';
+
+  scripts.vmid.exec = ''
+    output="container_$1_vmid"
+    terraform output -raw $output
   '';
 
   enterShell = ''

@@ -1,5 +1,5 @@
 ---
-- name: Update and install avahi-daemon
+- name: Install plex media server
   hosts: all
   remote_user: root
   tasks:
@@ -45,8 +45,10 @@
     - name: Create plex user
       ansible.builtin.user:
         name: plex
-        uid: 0
-        group: 0
+
+    - name: Set plex user to root
+      ansible.builtin.shell: |
+        usermod -ou 0 -g 0 plex
 
     - name: Install Plex Media Server
       ansible.builtin.apt:
