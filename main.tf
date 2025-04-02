@@ -162,28 +162,6 @@ resource "proxmox_virtual_environment_container" "plex" {
     private_key = file("~/.ssh/hub.local")
   }
 
-  provisioner "file" {
-    source      = "containers/plex/init.sh"
-    destination = "/root/init/plex/init.sh"
-  }
-
-  provisioner "file" {
-    source      = "containers/plex/media-nas.mount"
-    destination = "/root/init/plex/media-nas.mount"
-  }
-
-
-  provisioner "remote-exec" {
-    when = create
-    inline = [
-      "id=${proxmox_virtual_environment_container.plex.id}",
-
-      "pct push $id /root/init/plex/init.sh /root/init.sh",
-      "pct push $id /root/init/plex/media-nas.mount /root/media-nas.mount",
-
-      "lxc-attach -n $id -- bash init.sh"
-    ]
-  }
 }
 
 resource "proxmox_virtual_environment_download_file" "latest_ubuntu_24" {
