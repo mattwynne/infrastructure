@@ -7,7 +7,74 @@
       ansible.builtin.apt:
         update_cache: yes
 
-    - name: Install avahi-daemon
+    - name: Install dependencies
       ansible.builtin.apt:
-        name: avahi-daemon
+        name:
+          - avahi-daemon
+          - curl
+          - sudo
+          - mc
+          - gpg
         state: present
+
+    - name: Set up hardware acceleration
+      ansible.builtin.apt:
+        name:
+          - va-driver-all
+          - ocl-icd-libopencl1
+          - intel-opencl-icd
+          - vainfo
+          - intel-gpu-tools
+        state: present
+
+    - name: Configure hardware acceleration permissions
+      ansible.builtin.shell: |
+        if [[ "$CTTYPE" == "0" ]]; then
+          chgrp video /dev/dri
+          chmod 755 /dev/dri
+          chmod 660 /dev/dri/*
+          adduser $(id -u -n) video
+          adduser $(id -u -n) render
+        fi
+
+    - name: Set up Plex Media Server repository
+      ansible.builtin.shell: |
+        wget -qO- https://downloads.plex.tv/plex-keys/PlexSign.key >/usr/share/keyrings/PlexSign.asc
+        echo "deb [signed-by=/usr/share/keyrings/PlexSign.asc] https://downloads.plex.tv/repo/deb/ public main" >/etc/apt/sources.list.d/plexmediaserver.list
+
+    - name: Create plex user
+      ansible.builtin.user:
+        name: plex
+        uid: 0
+        group: 0
+
+    - name: Install Plex Media Server
+      ansible.builtin.apt:
+        update_cache: yes
+        name: plexmediaserver
+        state: present
+        force: yes
+
+    - name: Configure Plex Media Server groups
+      ansible.builtin.shell: |
+        if [[ "$CTTYPE" == "0" ]]; then
+          sed -i -e 's/^ssl-cert:x:104:plex$/render:x:104:root,plex/' -e 's/^render:x:108:root$/ssl-cert:x:108:plex/' /etc/group
+        else
+          sed -i -e 's/^ssl-cert:x:104:plex$/render:x:104:plex/' -e 's/^render:x:108:$/ssl-cert:x:108:/' /etc/group
+        fi
+
+    - name: Set up media share
+      ansible.builtin.apt:
+        name: cifs-utils
+        state: present
+
+    - name: Move media-nas.mount
+      ansible.builtin.copy:
+        src: media-nas.mount
+        dest: /etc/systemd/system/media-nas.mount
+
+    - name: Enable and start media-nas.mount
+      ansible.builtin.systemd:
+        name: media-nas.mount
+        enabled: yes
+        state: started
