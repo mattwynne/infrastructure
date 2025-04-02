@@ -4,7 +4,6 @@ terraform {
       source  = "bpg/proxmox"
       version = "0.73.1"
     }
-  }
   provisioner "local-exec" {
     command = <<EOT
       terraform output -raw ubuntu_container_private_key > /tmp/terraform_private_key.pem
@@ -13,6 +12,7 @@ terraform {
       rm /tmp/terraform_private_key.pem
     EOT
   }
+}
 
 provider "proxmox" {
   endpoint = "https://hub.local:8006/"
