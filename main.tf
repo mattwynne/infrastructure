@@ -139,3 +139,19 @@ output "container_plex_vmid" {
 output "container_sandbox_vmid" {
   value = proxmox_virtual_environment_container.sandbox.id
 }
+
+
+locals {
+  container_names = toset(
+    flatten(
+      [
+        for k, _ in toset(fileset("${path.module}/containers", "**"))
+        : dirname(k)
+      ]
+    )
+  )
+}
+
+output "test" {
+  value = local.container_names
+}
