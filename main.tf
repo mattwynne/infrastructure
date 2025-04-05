@@ -143,8 +143,8 @@ output "container_sandbox_vmid" {
 
 locals {
   container_map = {
-    for name, container in proxmox_virtual_environment_container :
-    name => container
+    "sandbox" = proxmox_virtual_environment_container.sandbox
+    "plex"    = proxmox_virtual_environment_container.plex
   }
 }
 
