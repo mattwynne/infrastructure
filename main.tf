@@ -152,6 +152,9 @@ locals {
   )
 }
 
-output "test" {
-  value = local.container_names
+output "container_vmid_map" {
+  value = {
+    for name in local.container_names :
+    name => proxmox_virtual_environment_container[name].id
+  }
 }
