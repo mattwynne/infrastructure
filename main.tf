@@ -73,7 +73,7 @@ resource "proxmox_virtual_environment_container" "container" {
   }
 
   dynamic "mount_point" {
-    for_each = each.value.mount != null ? [each.value.mount] : []
+    for_each = length(each.value.mount) > 0 ? [each.value.mount] : []
     content {
       volume = mount_point.value.volume
       path   = mount_point.value.path
