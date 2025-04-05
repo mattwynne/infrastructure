@@ -8,10 +8,10 @@ locals {
     )
   )
   container_config = {
-    for dir in local.container_names :
-    dir => merge(
-      yamldecode(file("${path.module}/containers/${dir}/container.yml")),
-      { hostname = dir }
+    for name in local.container_names :
+    name => merge(
+      yamldecode(file("${path.module}/containers/${name}/container.yml")),
+      { hostname = name }
     )
   }
 }
