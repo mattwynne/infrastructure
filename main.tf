@@ -97,18 +97,18 @@ output "container_public_key" {
 }
 
 output "container_plex_vmid" {
-  value = proxmox_virtual_environment_container.plex.id
+  value = proxmox_virtual_environment_container.container["plex"].id
 }
 
 output "container_sandbox_vmid" {
-  value = proxmox_virtual_environment_container.sandbox.id
+  value = proxmox_virtual_environment_container.container["sandbox"].id
 }
 
 
 locals {
   container_map = {
-    "sandbox" = proxmox_virtual_environment_container.sandbox
-    "plex"    = proxmox_virtual_environment_container.plex
+    for name, container in proxmox_virtual_environment_container.container :
+    name => container
   }
 }
 
