@@ -1,8 +1,23 @@
-resource "proxmox_virtual_environment_container" "sandbox" {
+locals {
+  containers = {
+    sandbox = {
+      vm_id = 101
+      hostname = "sandbox"
+    }
+    plex = {
+      vm_id = 102
+      hostname = "plex"
+    }
+  }
+}
+
+resource "proxmox_virtual_environment_container" "container" {
+  for_each = local.containers
+
   description = "Managed by Terraform"
 
   node_name = "hub"
-  vm_id     = 101
+  vm_id     = each.value.vm_id
 
   disk {
     datastore_id = "local"
@@ -14,7 +29,7 @@ resource "proxmox_virtual_environment_container" "sandbox" {
   }
 
   initialization {
-    hostname = "sandbox"
+    hostname = each.value.hostname
 
     ip_config {
       ipv4 {
@@ -36,8 +51,6 @@ resource "proxmox_virtual_environment_container" "sandbox" {
 
   operating_system {
     template_file_id = proxmox_virtual_environment_download_file.latest_ubuntu_24.id
-    # Or you can use a volume ID, as obtained from a "pvesm list <storage>"
-    # template_file_id = "local:vztmpl/jammy-server-cloudimg-amd64.tar.gz"
     type = "ubuntu"
   }
 
@@ -53,62 +66,13 @@ resource "proxmox_virtual_environment_container" "sandbox" {
     host        = "hub.local"
     private_key = file("~/.ssh/hub.local")
   }
-}
 
-resource "proxmox_virtual_environment_container" "plex" {
-  description = "Managed by Terraform"
-
-  node_name = "hub"
-  vm_id     = 102
-
-  disk {
-    datastore_id = "local"
-    size         = 8
-  }
-
-  features {
-    nesting = true
-  }
-
-  initialization {
-    hostname = "plex"
-
-    ip_config {
-      ipv4 {
-        address = "dhcp"
-      }
+  dynamic "mount_point" {
+    for_each = each.key == "plex" ? [1] : []
+    content {
+      volume = "/root/data/plex"
+      path   = "/var/lib/plexmediaserver"
     }
-
-    user_account {
-      keys = [
-        trimspace(tls_private_key.container_key.public_key_openssh)
-      ]
-      password = random_password.container_password.result
-    }
-
-  }
-
-  network_interface {
-    name = "eth0"
-  }
-
-  operating_system {
-    template_file_id = proxmox_virtual_environment_download_file.latest_ubuntu_24.id
-    # Or you can use a volume ID, as obtained from a "pvesm list <storage>"
-    # template_file_id = "local:vztmpl/jammy-server-cloudimg-amd64.tar.gz"
-    type = "ubuntu"
-  }
-
-  # TODO: these data folders should be on the nas too so we can re-pave the hub
-  mount_point {
-    volume = "/root/data/plex"
-    path   = "/var/lib/plexmediaserver"
-  }
-
-  startup {
-    order      = "3"
-    up_delay   = "60"
-    down_delay = "60"
   }
 }
 
