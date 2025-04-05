@@ -73,7 +73,7 @@ resource "proxmox_virtual_environment_container" "container" {
   }
 
   dynamic "mount_point" {
-    for_each = each.key == "plex" ? [1] : []
+    for_each = each.value.enable_mount ? [1] : []
     content {
       volume = "/root/data/plex"
       path   = "/var/lib/plexmediaserver"
