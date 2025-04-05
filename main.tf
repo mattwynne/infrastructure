@@ -1,13 +1,7 @@
 locals {
   containers = {
-    sandbox = {
-      vm_id = 101
-      hostname = "sandbox"
-    }
-    plex = {
-      vm_id = 102
-      hostname = "plex"
-    }
+    for dir in fileset("./containers", "*") :
+    dir => yamldecode(file("${path.module}/containers/${dir}/container.yml"))
   }
 }
 
