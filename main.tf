@@ -6,7 +6,7 @@ locals {
 }
 
 resource "proxmox_virtual_environment_container" "container" {
-  for_each = { for name, container in local.containers : name => container }
+  for_each = local.containers
 
   description = "Managed by Terraform"
 
@@ -91,11 +91,11 @@ output "container_public_key" {
 }
 
 output "container_plex_vmid" {
-  value = proxmox_virtual_environment_container.container["plex"].id
+  value = try(proxmox_virtual_environment_container.container["plex"].id, null)
 }
 
 output "container_sandbox_vmid" {
-  value = proxmox_virtual_environment_container.container["sandbox"].id
+  value = try(proxmox_virtual_environment_container.container["sandbox"].id, null)
 }
 
 
