@@ -45,7 +45,7 @@ resource "proxmox_virtual_environment_container" "container" {
 
   operating_system {
     template_file_id = proxmox_virtual_environment_download_file.latest_ubuntu_24.id
-    type = "ubuntu"
+    type             = "ubuntu"
   }
 
   startup {
@@ -90,20 +90,15 @@ output "container_public_key" {
   value = tls_private_key.container_key.public_key_openssh
 }
 
-output "container_plex_vmid" {
-  value = try(proxmox_virtual_environment_container.container["plex"].id, null)
-}
-
-output "container_sandbox_vmid" {
-  value = try(proxmox_virtual_environment_container.container["sandbox"].id, null)
-}
-
-
 locals {
   container_map = {
     for name, container in proxmox_virtual_environment_container.container :
     name => container
   }
+}
+
+output "containers" {
+  value = local.containers
 }
 
 output "container_vmid_map" {
