@@ -6,7 +6,7 @@ locals {
 }
 
 resource "proxmox_virtual_environment_container" "container" {
-  for_each = local.containers
+  for_each = { for name, container in local.containers : name => container }
 
   description = "Managed by Terraform"
 
