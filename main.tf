@@ -1,12 +1,20 @@
 locals {
-  containers = {
-    for dir in fileset("./containers", "*") :
+  container_names = toset(
+    flatten(
+      [
+        for k, _ in toset(fileset("${path.module}/containers", "**"))
+        : dirname(k)
+      ]
+    )
+  )
+  container_config = {
+    for dir in local.container_names :
     dir => yamldecode(file("${path.module}/containers/${dir}/container.yml"))
   }
 }
 
 resource "proxmox_virtual_environment_container" "container" {
-  for_each = local.containers
+  for_each = local.container_config
 
   description = "Managed by Terraform"
 
@@ -98,7 +106,7 @@ locals {
 }
 
 output "containers" {
-  value = local.containers
+  value = local.container_config
 }
 
 output "container_vmid_map" {
