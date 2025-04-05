@@ -1,0 +1,12 @@
+output "containers" {
+  value = local.container_config
+}
+
+output "container_private_key" {
+  value     = tls_private_key.container_key.private_key_pem
+  sensitive = true
+}
+
+output "container_public_key" {
+  value = tls_private_key.container_key.public_key_openssh
+}
