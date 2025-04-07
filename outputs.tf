@@ -1,5 +1,5 @@
 output "containers" {
-  value = local.container_config
+  value = local.containers
 }
 
 output "container_private_key" {

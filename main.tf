@@ -1,23 +1,5 @@
-locals {
-  container_names = toset(
-    flatten(
-      [
-        for k, _ in toset(fileset("${path.module}/containers", "**"))
-        : dirname(k)
-      ]
-    )
-  )
-  container_config = {
-    for name in local.container_names :
-    name => merge(
-      yamldecode(file("${path.module}/containers/${name}/container.yml")),
-      { hostname = name }
-    )
-  }
-}
-
 resource "proxmox_virtual_environment_container" "container" {
-  for_each = local.container_config
+  for_each = local.containers
 
   description = "Managed by Terraform"
 
@@ -43,9 +25,7 @@ resource "proxmox_virtual_environment_container" "container" {
     }
 
     user_account {
-      keys = [
-        trimspace(tls_private_key.container_key.public_key_openssh)
-      ]
+      keys     = [trimspace(tls_private_key.container_key.public_key_openssh)]
       password = random_password.container_password.result
     }
   }
