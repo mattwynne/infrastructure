@@ -61,8 +61,10 @@
     make-plex
     destroy
     apply
+    # TODO: provision as a loop
     provision plex
     provision sandbox
+    provision docker
   '';
 
   scripts.console.exec = ''
@@ -80,12 +82,18 @@
 
   scripts.provision.exec = ''
     name=$1
-    ip=$(ip $name)
-
-    if [ -f containers/$name/init.sh ]; then
-      provision-init $name
+    if [ -z "$name" ]; then
+      # TODO: can we parallelize provisioning?
+      for name in $(list-containers); do
+        provision $name 
+      done
     else
-      provision-ansible $name
+      ip=$(ip $name)
+      if [ -f containers/$name/init.sh ]; then
+        provision-init $name
+      else
+        provision-ansible $name
+      fi
     fi
   '';
 
@@ -113,6 +121,10 @@
 
     # Remove key
     rm /tmp/private_key.pem
+  '';
+
+  scripts.list-containers.exec = ''
+  terraform output -json | jq -r '.containers.value | keys []'
   '';
 
   scripts.vmid.exec = ''

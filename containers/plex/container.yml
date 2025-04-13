@@ -1,5 +1,5 @@
 vm_id: 102
 mount:
+  # TODO: make this storage space be on the NAS
   - volume: "/root/data/plex"
     path: "/var/lib/plexmediaserver"
-  # Add more mount points as needed
