@@ -36,7 +36,8 @@
   '';
 
   scripts.ip.exec = ''
-    id=$(basename $1)
+    name=$1
+    id=$(vmid $name)
     ssh hub.local "
       ip=""
       while [ -z \"\$ip\" ]; do
@@ -66,7 +67,7 @@
 
   scripts.console.exec = ''
     name=$1
-    ip=$(ip $(vmid $name))
+    ip=$(ip $name)
 
     ssh-keygen -R $ip
     terraform output -raw container_private_key > /tmp/private_key.pem
@@ -79,7 +80,7 @@
 
   scripts.provision.exec = ''
     name=$1
-    ip=$(ip $(vmid $name))
+    ip=$(ip $name)
 
     if [ -f containers/$name/init.sh ]; then
       provision-init $name
@@ -100,7 +101,7 @@
 
   scripts.provision-ansible.exec = ''
     name=$1
-    ip=$(ip $(vmid $name))
+    ip=$(ip $name)
 
     # Set up key
     ssh-keygen -R $ip
