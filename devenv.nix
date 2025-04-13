@@ -115,8 +115,9 @@
   '';
 
   scripts.vmid.exec = ''
-    output="container_$1_vmid"
-    terraform output -raw $output
+    name=$1
+    terraform output -json | \
+      jq -r --arg name "$name" '.containers.value[$name].vm_id'
   '';
 
   enterShell = ''
