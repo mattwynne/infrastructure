@@ -4,7 +4,6 @@ resource "proxmox_virtual_environment_container" "container" {
   description = "Managed by Terraform"
 
   node_name = "hub"
-  # vm_id     = each.value.vm_id
 
   disk {
     datastore_id = "local"

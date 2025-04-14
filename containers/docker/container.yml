@@ -1,6 +1,1 @@
-vm_id: 103
 mount: []
-# mount:
-#   - volume: "/root/data/plex"
-#     path: "/var/lib/plexmediaserver"
-  # Add more mount points as needed

@@ -116,7 +116,7 @@
     ip=$(ip $name)
 
     # Set up key
-    ssh-keygen -R $ip
+    ssh-keygen -qR $ip > /dev/null 2>&1
     terraform output -raw container_private_key > /tmp/private_key.pem
     chmod 600 /tmp/private_key.pem
 
@@ -134,7 +134,7 @@
   scripts.vmid.exec = ''
     name=$1
     terraform output -json | \
-      jq -r --arg name "$name" '.containers.value[$name].vm_id'
+      jq -r --arg name "$name" '.ids.value[$name]'
   '';
 
   enterShell = ''
