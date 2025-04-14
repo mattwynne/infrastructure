@@ -2,6 +2,9 @@ big goal:
   refactor current setup to be ready to absorb more containers
 
   - Next steps / options:
+    - install https://nginxproxymanager.com/ 
+      - figure out a good general setup for docker containers
+	- e.g. https://www.portainer.io
     - abstract VM_IDs using some kind of random number generator
     - avoid using local storage on the proxmox server for easy re-paving
       - could we terraform/auto-provision the proxmox server itself?

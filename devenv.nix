@@ -38,10 +38,11 @@
   scripts.ip.exec = ''
     name=$1
     id=$(vmid $name)
+    local_range="192.168.1"
     ssh hub.local "
       ip=""
       while [ -z \"\$ip\" ]; do
-        ip=\$(lxc-info -i -n $id | grep 'IP' | awk '{print \$2}')
+        ip=\$(lxc-info -i -n $id | grep 'IP' | grep '$local_range' | awk '{print \$2}')
       done
       echo \$ip
     "
@@ -71,11 +72,14 @@
     name=$1
     ip=$(ip $name)
 
-    ssh-keygen -R $ip
+    ssh-keygen -qR $ip > /dev/null 2>&1
     terraform output -raw container_private_key > /tmp/private_key.pem
     chmod 600 /tmp/private_key.pem
 
-    ssh -i /tmp/private_key.pem root@$ip
+    ssh -q \
+      -o StrictHostKeyChecking=no \
+      -i /tmp/private_key.pem \
+      root@$ip
 
     rm /tmp/private_key.pem
   '';
