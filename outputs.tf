@@ -4,7 +4,6 @@ output "containers" {
 
 output "ids" {
   value = { for name, container in proxmox_virtual_environment_container.container : name => container.id }
-  sensitive = true
 }
 
 output "container_private_key" {
