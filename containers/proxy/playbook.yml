@@ -68,6 +68,3 @@
       ansible.builtin.template:
         src: hosts.j2
         dest: /etc/hosts
-        owner: root
-        group: root
-        mode: '0644'
