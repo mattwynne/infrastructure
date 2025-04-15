@@ -44,6 +44,10 @@
           - docker-compose-plugin
         state: present
 
+    - name: Get IP address for plex
+      ansible.builtin.command: ip plex
+      register: plex_ip
+
     - name: Copy hosts file to host, containing IP addresses of other hosts
       ansible.builtin.template:
         src: ./hosts.j2
