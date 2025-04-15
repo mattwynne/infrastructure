@@ -60,6 +60,10 @@
       ansible.builtin.systemd:
         daemon_reload: yes
 
+    - name: Disable AppArmor for Docker
+      ansible.builtin.command: 
+        cmd: "aa-complain /etc/apparmor.d/docker"
+
     - name: Enable and start docker-compose service
       ansible.builtin.systemd:
         name: docker-compose
