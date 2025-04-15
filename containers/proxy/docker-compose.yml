@@ -1,6 +1,6 @@
 services:
   app:
-    image: "jc21/nginx-proxy-manager:latest"
+    build: .
     restart: unless-stopped
     ports:
       - "80:80"
@@ -9,3 +9,7 @@ services:
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
+      - /var/run/dbus:/var/run/dbus
+      - /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket
+    security_opt:
+      - apparmor:unconfined

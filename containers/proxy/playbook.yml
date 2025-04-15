@@ -10,6 +10,7 @@
     - name: Install required packages
       ansible.builtin.apt:
         name:
+          - avahi-daemon
           - ca-certificates
           - curl
         state: present
@@ -43,7 +44,6 @@
           - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
-          - docker-compose
         state: present
 
     - name: Copy docker-compose.yml to host
@@ -51,6 +51,11 @@
         src: ./docker-compose.yml
         dest: /root/docker-compose.yml
 
+    - name: Copy Dockerfile
+      ansible.builtin.copy:
+        src: ./Dockerfile
+        dest: /root/Dockerfile
+      
     - name: Copy systemd service for docker-compose
       ansible.builtin.copy:
         src: ./docker-compose.service
@@ -60,21 +65,8 @@
       ansible.builtin.systemd:
         daemon_reload: yes
 
-    - name: Ensure AppArmor and utils are installed
-      ansible.builtin.apt:
-        name:
-          - apparmor
-          - apparmor-utils
-        state: present
-
-    - name: Disable AppArmor for Docker
-      ansible.builtin.command:
-        cmd: "aa-complain /etc/apparmor.d/docker"
-      become: yes
-
     - name: Enable and start docker-compose service
       ansible.builtin.systemd:
         name: docker-compose
         enabled: yes
         state: started
-
