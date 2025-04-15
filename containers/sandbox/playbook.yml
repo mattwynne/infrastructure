@@ -1,6 +1,6 @@
 ---
 - name: Setup sandbox environment
-  hosts: localhost
+  hosts: all
   become: yes
   tasks:
     - name: Update apt cache

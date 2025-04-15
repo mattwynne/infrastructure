@@ -30,7 +30,8 @@ resource "proxmox_virtual_environment_container" "container" {
   }
 
   network_interface {
-    name = "eth0"
+    name        = "eth0"
+    mac_address = local.mac_addresses[each.key]
   }
 
   operating_system {
