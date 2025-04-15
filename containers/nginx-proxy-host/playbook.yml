@@ -49,7 +49,7 @@
     - name: Copy docker-compose.yml to host
       ansible.builtin.copy:
         src: ./docker-compose.yml
-        dest: /opt/nginx-proxy-host/docker-compose.yml
+        dest: /root/docker-compose.yml
 
     - name: Copy systemd service for docker-compose
       ansible.builtin.copy:
