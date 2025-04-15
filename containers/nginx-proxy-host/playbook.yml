@@ -53,9 +53,9 @@
         group: root
         mode: '0644'
 
-    - name: Create systemd service for docker-compose
-      ansible.builtin.template:
-        src: docker-compose.service.j2
+    - name: Copy systemd service for docker-compose
+      ansible.builtin.copy:
+        src: ./docker-compose.service
         dest: /etc/systemd/system/docker-compose.service
         owner: root
         group: root
