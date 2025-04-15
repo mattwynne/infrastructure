@@ -58,8 +58,4 @@ resource "proxmox_virtual_environment_container" "container" {
       path   = mount_point.value.path
     }
   }
-
-  provisioner "local-exec" {
-    command = "ip ${each.value.hostname}"
-  }
 }
