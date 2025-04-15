@@ -64,6 +64,18 @@
         enabled: yes
         state: started
 
+    - name: Set sandbox IP
+      ansible.builtin.set_fact:
+        sandbox_ip: "{{ lookup('file', '../sandbox/ip') }}"
+
+    - name: Set plex IP
+      ansible.builtin.set_fact:
+        plex_ip: "{{ lookup('file', '../plex/ip') }}"
+
+    - name: Set proxy IP
+      ansible.builtin.set_fact:
+        proxy_ip: "{{ lookup('file', './ip') }}"
+
     - name: Update /etc/hosts from template
       ansible.builtin.template:
         src: hosts.j2

@@ -3,9 +3,9 @@
 {{ ansible_default_ipv4.address }}   {{ ansible_hostname }}
 
 # Container IP addresses
-192.168.1.191   sandbox
-192.168.1.201   plex
-192.168.1.127   proxy
+{{ sandbox_ip }}   sandbox
+{{ plex_ip }}   plex
+{{ proxy_ip }}   proxy
 
 # The following lines are desirable for IPv6-capable hosts
 ::1     ip6-localhost ip6-loopback
