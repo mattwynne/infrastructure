@@ -60,9 +60,11 @@
       ansible.builtin.systemd:
         daemon_reload: yes
 
-    - name: Ensure AppArmor is installed
+    - name: Ensure AppArmor and utils are installed
       ansible.builtin.apt:
-        name: apparmor
+        name:
+          - apparmor
+          - apparmor-utils
         state: present
 
     - name: Disable AppArmor for Docker
