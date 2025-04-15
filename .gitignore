@@ -16,3 +16,6 @@ terraform.tfstate
 terraform.tfstate.backup
 
 containers/plex/media-nas.mount
+
+# Ignore container IP files
+containers/*/ip
