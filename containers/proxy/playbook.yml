@@ -10,9 +10,7 @@
     - name: Install required packages
       ansible.builtin.apt:
         name:
-          - avahi-daemon
           - ca-certificates
-          - curl
         state: present
 
     - name: Create keyrings directory
@@ -46,16 +44,16 @@
           - docker-compose-plugin
         state: present
 
+    - name: Copy hosts file to host, containing IP addresses of other hosts
+      ansible.builtin.template:
+        src: ./hosts.j2
+        dest: /etc/hosts
+
     - name: Copy docker-compose.yml to host
       ansible.builtin.copy:
         src: ./docker-compose.yml
         dest: /root/docker-compose.yml
-
-    - name: Copy Dockerfile
-      ansible.builtin.copy:
-        src: ./Dockerfile
-        dest: /root/Dockerfile
-      
+ 
     - name: Copy systemd service for docker-compose
       ansible.builtin.copy:
         src: ./docker-compose.service
