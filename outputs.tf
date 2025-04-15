@@ -3,7 +3,7 @@ output "containers" {
 }
 
 output "container_ips" {
-  value = { for name, container in data.external.container_ip : name => container.result }
+  value = { for name, container in local.containers : name => container.hostname }
 }
 
 output "ids" {
