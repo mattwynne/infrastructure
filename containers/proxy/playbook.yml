@@ -45,7 +45,8 @@
         state: present
 
     - name: Get IP address for plex
-      ansible.builtin.local_action: command ip plex
+      ansible.builtin.command: ip plex
+      delegate_to: localhost
       register: plex_ip
 
     - name: Copy hosts file to host, containing IP addresses of other hosts
