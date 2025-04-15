@@ -56,6 +56,7 @@
 
   scripts.apply.exec = ''
     terraform apply -auto-approve
+    write-ips
   '';
 
   scripts.destroy.exec = ''
