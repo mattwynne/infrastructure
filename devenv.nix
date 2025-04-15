@@ -55,17 +55,20 @@
   scripts.destroy.exec = ''
     name=$1
     id=$(vmid $name)
-    ssh hub.local lxc-destroy -f $id
+    ssh hub.local pct destroy $id --force --purge
   '';
 
   scripts.reapply.exec = ''
     make-plex
-    destroy
+    # TODO: destroy as a loop
+    destroy plex
+    destroy sandbox
+    destroy proxy
     apply
     # TODO: provision as a loop
     provision plex
     provision sandbox
-    provision docker
+    provision proxy
   '';
 
   scripts.console.exec = ''

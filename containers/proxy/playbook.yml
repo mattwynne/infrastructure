@@ -44,17 +44,6 @@
           - docker-compose-plugin
         state: present
 
-    - name: Get IP address for plex
-      ansible.builtin.command: ip plex
-      become: yes
-      delegate_to: localhost
-      register: plex_ip
-
-    - name: Copy hosts file to host, containing IP addresses of other hosts
-      ansible.builtin.template:
-        src: ./hosts.j2
-        dest: /etc/hosts
-
     - name: Copy docker-compose.yml to host
       ansible.builtin.copy:
         src: ./docker-compose.yml

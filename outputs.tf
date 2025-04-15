@@ -2,10 +2,6 @@ output "containers" {
   value = local.containers
 }
 
-output "container_ips" {
-  value = { for name, container in local.containers : name => container.hostname }
-}
-
 output "ids" {
   value = { for name, container in proxmox_virtual_environment_container.container : name => container.id }
 }
