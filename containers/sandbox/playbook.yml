@@ -1,0 +1,13 @@
+---
+- name: Setup sandbox environment
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install avahi-daemon
+      apt:
+        name: avahi-daemon
+        state: present
