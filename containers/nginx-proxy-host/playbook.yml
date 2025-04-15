@@ -56,6 +56,10 @@
         src: ./docker-compose.service
         dest: /etc/systemd/system/docker-compose.service
 
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
     - name: Enable and start docker-compose service
       ansible.builtin.systemd:
         name: docker-compose
