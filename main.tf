@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_container" "container" {
 
     ip_config {
       ipv4 {
-        address = each.value.ip != null ? each.value.ip : "dhcp"
+        address = contains(each.value, "ip") ? each.value.ip : "dhcp"
       }
     }
 
