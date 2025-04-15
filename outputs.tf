@@ -2,6 +2,10 @@ output "containers" {
   value = local.containers
 }
 
+output "container_ips" {
+  value = { for name, container in data.external.container_ip : name => container.result }
+}
+
 output "ids" {
   value = { for name, container in proxmox_virtual_environment_container.container : name => container.id }
 }

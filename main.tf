@@ -59,7 +59,11 @@ resource "proxmox_virtual_environment_container" "container" {
     }
   }
 
-  provisioner "local-exec" {
-    command = "ip ${each.value.hostname}"
+  data "external" "container_ip" {
+    for_each = local.containers
+
+    program = ["sh", "-c", "ip ${each.value.hostname}"]
+
+    query = {}
   }
 }
