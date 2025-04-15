@@ -75,8 +75,3 @@
     - name: Set proxy IP
       ansible.builtin.set_fact:
         proxy_ip: "{{ lookup('file', './ip') }}"
-
-    - name: Update /etc/hosts from template
-      ansible.builtin.template:
-        src: hosts.j2
-        dest: /etc/hosts

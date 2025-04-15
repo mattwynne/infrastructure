@@ -11,3 +11,8 @@ services:
       - ./letsencrypt:/etc/letsencrypt
     security_opt:
       - apparmor:unconfined
+    extra_hosts:
+      - "plex:192.168.1.201"
+      - "sandbox:192.168.1.191"
+      - "proxy:192.168.1.92"
+

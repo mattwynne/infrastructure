@@ -48,6 +48,12 @@
     "
   '';
 
+  scripts.write-ips.exec = ''
+    for host in $(list-containers); do 
+      ip $host > containers/$host/ip
+    done
+  '';
+
   scripts.apply.exec = ''
     terraform apply -auto-approve
   '';
