@@ -46,6 +46,7 @@
 
     - name: Get IP address for plex
       ansible.builtin.command: ip plex
+      become: yes
       delegate_to: localhost
       register: plex_ip
 
