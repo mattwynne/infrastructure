@@ -54,6 +54,11 @@
         src: ./docker-compose.service
         dest: /etc/systemd/system/docker-compose.service
 
+    - name: Copy media-nas.mount to systemd
+      ansible.builtin.template:
+        src: ./media-nas.mount.j2
+        dest: /etc/systemd/system/media-nas.mount
+
     - name: Reload systemd daemon
       ansible.builtin.systemd:
         daemon_reload: yes
@@ -63,3 +68,9 @@
         name: docker-compose
         enabled: yes
         state: started
+
+    - name: Enable and start media-nas mount
+      ansible.builtin.systemd:
+        name: media-nas.mount
+        enabled: yes
+        state: mounted
