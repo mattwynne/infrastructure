@@ -7,12 +7,27 @@ services:
       - "81:81"
       - "443:443"
     volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - /media/nas/data:/data
+      - /media/nas/letsencrypt:/etc/letsencrypt
     security_opt:
       - apparmor:unconfined
-    extra_hosts:
-      - "plex:192.168.1.201"
-      - "sandbox:192.168.1.191"
-      - "proxy:192.168.1.92"
+    environment:
+      # Postgres parameters:
+      DB_POSTGRES_HOST: 'db'
+      DB_POSTGRES_PORT: '5432'
+      DB_POSTGRES_USER: 'npm'
+      DB_POSTGRES_PASSWORD: 'npmpass'
+      DB_POSTGRES_NAME: 'npm'
+    depends_on:
+      - db
 
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: 'npm'
+      POSTGRES_PASSWORD: 'npmpass'
+      POSTGRES_DB: 'npm'
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - /media/nas/postgres:/var/lib/postgresql/data

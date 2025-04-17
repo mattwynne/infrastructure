@@ -3,7 +3,7 @@
   hosts: all
   become: yes
   vars:
-    nas_password: "{{ lookup('env', 'NAS_PASSWORD') }}"
+    nas_password: "{{ lookup('env', 'PROXY_NAS_PASSWORD') }}"
   tasks:
     - name: Update apt cache
       ansible.builtin.apt:
@@ -36,7 +36,7 @@
       ansible.builtin.apt:
         update_cache: yes
 
-    - name: Install Docker packages
+    - name: Install packages
       ansible.builtin.apt:
         name:
           - docker-ce
@@ -44,6 +44,7 @@
           - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
+          - cifs-utils
         state: present
 
     - name: Copy docker-compose.yml to host
@@ -69,7 +70,7 @@
       ansible.builtin.systemd:
         name: media-nas.mount
         enabled: yes
-        state: mounted
+        state: started
 
     - name: Enable and start docker-compose service
       ansible.builtin.systemd:
