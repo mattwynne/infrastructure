@@ -2,6 +2,8 @@
 - name: Set up Docker
   hosts: all
   become: yes
+  vars:
+    nas_password: "{{ lookup('env', 'NAS_PASSWORD') }}"
   tasks:
     - name: Update apt cache
       ansible.builtin.apt:
