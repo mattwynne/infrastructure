@@ -7,8 +7,8 @@ services:
       - "81:81"
       - "443:443"
     volumes:
-      - /media/nas/proxy/data:/data
-      - /media/nas/proxy/letsencrypt:/etc/letsencrypt
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
     security_opt:
       - apparmor:unconfined
     environment:
