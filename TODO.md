@@ -3,6 +3,10 @@ big goal:
 
   - Next steps / options:
     - install https://nginxproxymanager.com/ 
+      - **avoid using local storage on the proxmox server for easy re-paving**
+        - sql didn't work - SQLITE_BUSY
+        - trying postgres. Similarly seems to have permissions issues with the share
+        - maybe be something to do with docker, and the user that pg user?
     - make copying files onto new VM more conventional?
     - avoid using local storage on the proxmox server for easy re-paving
       - tidy up secrets templating for plex server media mount point
