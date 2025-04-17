@@ -4,10 +4,10 @@
   After=network-online.service
 
 [Mount]
-  What=//192.168.1.101/personal-drive
+  What=192.168.1.101:/var/nfs/shared/container_data
   Where=/media/nas
-  Options=username=container-proxy,password={{ nas_password }},file_mode=777,dir_mode=777
-  Type=cifs
+  Options=nfsvers=3,nolock
+  Type=nfs
 
 [Install]
   WantedBy=multi-user.target
