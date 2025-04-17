@@ -63,14 +63,14 @@
       ansible.builtin.systemd:
         daemon_reload: yes
 
-    - name: Enable and start docker-compose service
-      ansible.builtin.systemd:
-        name: docker-compose
-        enabled: yes
-        state: started
-
     - name: Enable and start media-nas mount
       ansible.builtin.systemd:
         name: media-nas.mount
         enabled: yes
         state: mounted
+
+    - name: Enable and start docker-compose service
+      ansible.builtin.systemd:
+        name: docker-compose
+        enabled: yes
+        state: started
